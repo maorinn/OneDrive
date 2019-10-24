@@ -1,6 +1,8 @@
-api_auth_url="https://login.microsoftonline.com/common/oauth2/token"
-api_discovery_url="https://api.office.com/discovery/v2.0/me/services"
-api_discovery_id="https://api.office.com/discovery/"
+api_uri="https://alphaone-my.sharepoint.cn/_api/v2.0/me" #change {tenant} to yourcompany
+api_resource_id="https://alphaone-my.sharepoint.cn"
+api_auth_url="https://login.chinacloudapi.cn/common/oauth2/token"
+api_discovery_url="https://alphaone-my.sharepoint.cn/"
+api_discovery_id="00000003-0000-0ff1-ce00-000000000000"
 get_json_value="cut -d= -f2-"
 curl_opts="--silent --retry ${http_retries} --retry-delay 10 -g"
 
