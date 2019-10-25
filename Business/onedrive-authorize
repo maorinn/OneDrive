@@ -1,16 +1,11 @@
 #!/bin/bash
-cd /usr/local/etc/OneDrive
+script_base_folder=$(dirname "$0")
 read -p "租户名:" tenant
 read -p "Client_ID:" Client_ID
 read -p "Client_ID:" Client_secret
-sed 's/alphaone/${tenant}/g' onedrive-base
-
-
-
-
-
-
-script_base_folder=$(dirname "$0")
+sed 's/alphaone/${tenant}/g' ${script_base_folder}/onedrive-base
+sed 's/iddddd/${Client_ID}/g' ${script_base_folder}/onedrive.cfg
+sed 's/sttttt/${Client_secret}/g' ${script_base_folder}/onedrive.cfg
 source "${script_base_folder}/onedrive.cfg"
 source "${script_base_folder}/onedrive-base"
 export json_parser="${script_base_folder}/json-parser"
@@ -28,7 +23,7 @@ refresh_token=$(echo "${api_json_result}" | "${json_parser}" | grep -E "^refresh
 if [ "${refresh_token}" != "" ]; then
     filesystem_save_refresh_token "${refresh_token}"
     echo -e "\n\033[04mIt seems like we have a refresh token, so we are ready to go.\033[0m"
-	sed 's/api_resource_id=\"00000003-0000-0ff1-ce00-000000000000\"/api_resource_id=\"https://${tenant}-my.sharepoint.cn\"/g' onedrive-base
+	sed 's/api_resource_id=\"00000003-0000-0ff1-ce00-000000000000\"/api_resource_id=\"https://${tenant}-my.sharepoint.cn\"/g' ${script_base_folder}/onedrive-base
 else
     echo -e "\n\033[04mSomething went wrong, here is the API response:\033[0m"
     echo "${api_json_result}"
