@@ -1,8 +1,7 @@
 api_uri="https://alphaone-my.sharepoint.cn/_api/v2.0/me" #change {tenant} to yourcompany
-api_resource_id="https://alphaone-my.sharepoint.cn"
+api_resource_id="00000003-0000-0ff1-ce00-000000000000"
 api_auth_url="https://login.chinacloudapi.cn/common/oauth2/token"
 api_discovery_url="https://alphaone-my.sharepoint.cn/"
-api_discovery_id="00000003-0000-0ff1-ce00-000000000000"
 get_json_value="cut -d= -f2-"
 curl_opts="--silent --retry ${http_retries} --retry-delay 10 -g"
 
@@ -56,19 +55,8 @@ function urlencode() {
 # --- cURL calls --- #
 # ------------------ #
 function curl_discover_uri() {
-	local api_access_token=$(onedrive_acquire_access_token ${api_discovery_id}) 
-	exit_on_error
-
-	local api_parsed_json_result=$(curl \
-	    ${curl_opts} \
-	    --get \
-            --header "Authorization: Bearer ${api_access_token}" \
-            --header "Accept: application/json; odata.metadata=none" \
-	    --data-urlencode "\$select=serviceEndpointUri,serviceResourceId" \
-	    --data-urlencode "\$filter=capability eq 'MyFiles' and serviceApiVersion eq 'v2.0'" \
-	    "${api_discovery_url}" | "${json_parser}")
-	api_uri=$(echo "${api_parsed_json_result}" | grep "serviceEndpointUri" | ${get_json_value})
-	api_resource_id=$(echo "${api_parsed_json_result}" | grep "serviceResourceId" | ${get_json_value})
+	api_uri=$(echo "https://alphaone-my.sharepoint.cn/_api/v2.0/me") #change {tenant} to yourcompany
+	api_resource_id=$(echo "https://alphaone-my.sharepoint.cn/")    #change {tenant} to yourcompany
 }
 
 # $1=folder id
@@ -291,7 +279,7 @@ function onedrive_acquire_access_token() {
 
 	api_parsed_json_result=$(curl_get_access_token "${old_refresh_token}" "$1")
 
-	new_refresh_token=$(echo "${api_parsed_json_result}" | grep "refresh_token" | ${get_json_value})
+	new_refresh_token=$(echo "${api_parsed_json_result}" | grep -E "^refresh_token=" | ${get_json_value})
 
 	filesystem_save_refresh_token "${new_refresh_token}"
 	exit_on_error
